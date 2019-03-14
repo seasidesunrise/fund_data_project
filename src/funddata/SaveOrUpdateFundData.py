@@ -1,5 +1,12 @@
 import datetime
+import os
 import re
+import sys
+
+curPath = os.path.abspath(os.path.dirname(__file__))
+parentPath = os.path.split(curPath)[0]
+rootPath = os.path.split(parentPath)[0]
+sys.path.append(rootPath)
 
 import requests
 from sqlalchemy import *
