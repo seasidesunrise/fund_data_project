@@ -79,11 +79,29 @@ def do_job(engine, fundcode):
             buystatus = entry[4]
             salestatus = entry[5]
             fenhong = entry[6]
-            tmpFundData = FundData.FundData(fundcode, date, dwjz, ljjz, rzzl,
-                                            buystatus, salestatus, fenhong, 0, 0,
-                                            strtoday)
-            # 添加到session:
-            session.merge(tmpFundData)
+
+            # 使用原生sql，解决session.merge重复主键的问题
+            tmpsql = "replace into " + tablename + "(fundcode, `date`, dwjz,ljjz, rzzl," \
+                                                   "buystatus, salestatus, fenhong, is_index, pe, " \
+                                                   "`lastmodified`) values ('" + fundcode + "'" \
+                                                   ", '" + date + "'" \
+                                                   ", '" + dwjz + "'" \
+                                                   ", '" + ljjz + "'" \
+                                                   ", '" + rzzl + "'" \
+                                                   ", '" + buystatus + "'" \
+                                                   ", '" + salestatus + "'" \
+                                                   ", '" + fenhong + "'" \
+                                                   ", 0" \
+                                                   ", 0" \
+                                                   ", '" + strtoday + "'" \
+                                                   ")"
+            print(tmpsql)
+            # tmpFundData = FundData.FundData(fundcode, date, dwjz, ljjz, rzzl,
+            #                                 buystatus, salestatus, fenhong, 0, 0,
+            #                                 strtoday)
+            # # 添加到session:
+            # session.merge(tmpFundData)
+            session.execute(tmpsql)
             current_date = date
 
             if page == 1 and current_date < last_update_time:
